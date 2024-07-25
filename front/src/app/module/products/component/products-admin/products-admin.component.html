@@ -1,0 +1,112 @@
+<div class="card">
+    <p-table #dt 
+    [value]="products" 
+    [rows]="10"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [(selection)]="selectedProducts" 
+    dataKey="id" 
+    editMode="row"
+    [lazy]="false"
+    [paginator]="true"
+    [globalFilterFields]="['code', 'name']">
+    <ng-template pTemplate="caption">
+        <div class="flex">
+            <p-button icon="pi pi-plus" (click)="addProduct()" ></p-button>
+            <p-button icon="pi pi-trash" (click)="deleteSeletedProduct()" ></p-button>
+            <p-iconField iconPosition="left" class="ml-auto">
+                <p-inputIcon>
+                    <i class="pi pi-search"></i>
+                </p-inputIcon>
+                <input 
+                    pInputText 
+                    type="text" 
+                    (input)="dt.filterGlobal($any($event.target).value,'contains')" 
+                    placeholder="Recherche" />
+            </p-iconField>
+        </div>
+    </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                <th pSortableColumn="code">
+                    Code <p-sortIcon field="code" > </p-sortIcon> 
+                </th>
+                <th pSortableColumn="name">
+                    Name <p-sortIcon field="name" > </p-sortIcon> 
+                </th>
+                <th >
+                    Action 
+                </th> 
+            </tr>
+            <tr>
+                
+                <th>
+
+                </th>
+            <th *ngFor="let col of cols"> 
+                <input pInputText type="text" (input)= "dt.filter($any($event.target).value, col.field, col.filterMatchMode)" /> 
+            </th> 
+                <th>
+
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product
+         let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="product">
+                <td> 
+                    <p-tableCheckbox [value]="product"  
+                                     [index]="ri"> 
+                    </p-tableCheckbox> 
+                </td> 
+    
+                <td >
+                    <p-cellEditor >
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.code">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.code}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td >
+                    <p-cellEditor >
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text"
+                             [(ngModel)]="product.name">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.name}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+
+                <td>
+                    <button *ngIf="!editing" 
+                    pButton pRipple type="button" 
+                    pInitEditableRow icon="pi pi-pencil" 
+                    (click)="onRowEditInit(product,ri)"  
+                    class="p-button-rounded p-button-text"> </button> 
+                    <button *ngIf="editing" 
+                    pButton pRipple type="button" 
+                    pSaveEditableRow icon="pi pi-check" 
+                    (click)="onRowEditSave(product, ri)"  
+                    class="p-button-rounded  
+                           p-button-text  
+                           p-button-success mr-2"> 
+                    </button>
+                    <button *ngIf="editing" 
+                    pButton pRipple type="button" 
+                    pCancelEditableRow icon="pi pi-times" 
+                    (click)="onRowEditCancel(product, ri)"  
+                    class="p-button-rounded  
+                           p-button-text  
+                           p-button-danger"></button>
+                    <button pButton type="button" icon="pi pi-trash" (click)="deleteProduct(product,ri)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
